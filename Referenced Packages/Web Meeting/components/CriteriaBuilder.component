@@ -1,0 +1,269 @@
+<apex:component controller="WM2.CriteriaBuilderController">
+    <apex:attribute name="Object" type="string" description="Object name" assignTo="{!ObjectName}" />
+    <apex:attribute name="mediator" type="WM2.ComponentMediator" description="Object name" 
+        assignTo="{!componentMediator}" />
+    <apex:attribute name="SerializedCriteria" type="String" 
+        description="Used to initialize criteria, opional" assignTo="{!SerializedCriteria}" />
+    <apex:includeScript value="https://ajax.googleapis.com/ajax/libs/jquery/1.4.2/jquery.min.js" />
+    <apex:includeScript value="https://ajax.googleapis.com/ajax/libs/jqueryui/1.8.5/jquery-ui.min.js" />
+    <apex:stylesheet value="https://ajax.googleapis.com/ajax/libs/jqueryui/1.8.5/themes/smoothness/jquery-ui.css"/>
+
+    <style type="text/css">
+    .lookupIcon2 { 
+        background-image: url(/img/func_icons/util/lookup20.gif);
+        background-position: 0px 0px;
+        width:20px;
+        height:20px;
+        background-position: top left;      
+    }
+    .filterTable td {
+        vertical-align: middle;
+    }
+    </style>
+    
+    <script type="text/javascript">
+    $j = jQuery.noConflict();
+    </script>   
+    <script type="text/javascript">
+    var operatorsByType = new Object();
+    operatorsByType["string"] = ["-- select --", "equals", "not equal to", "starts with", "contains"];
+    operatorsByType["textarea"] = ["-- select --", "equals", "not equal to", "starts with", "contains"];
+    operatorsByType["email"] = ["-- select --", "equals", "not equal to", "starts with", "contains"];
+    operatorsByType["boolean"] = ["-- select --", "is true", "is false"];
+    operatorsByType["combobox"] = ["-- select --", "equals", "not equal to", "starts with", "contains"];
+    operatorsByType["phone"] = ["-- select --", "equals", "not equal to"];
+    operatorsByType["reference"] = ["-- select --", "equals", "not equal to"];
+    operatorsByType["id"] = ["-- select --", "equals", "not equal to"];
+    operatorsByType["picklist"] = ["-- select --", "equals", "not equal to"];
+    operatorsByType["multipicklist"] = ["-- select --", "equals", "not equal to", "includes", "excludes"];
+    operatorsByType["time"] = ["-- select --", "equals", "not equal to", "greater than", "less than", "less or equal", "greater or equal"];
+    operatorsByType["datetime"] = ["-- select --", "equals", "not equal to", "greater than", "less than", "less or equal", "greater or equal"];
+    operatorsByType["date"] = ["-- select --", "equals", "not equal to", "greater than", "less than", "less or equal", "greater or equal"];
+    operatorsByType["currency"] = ["-- select --", "equals", "not equal to", "greater than", "less than", "less or equal", "greater or equal"];
+    operatorsByType["double"] = ["-- select --", "equals", "not equal to", "greater than", "less than", "less or equal", "greater or equal"];
+    operatorsByType["integer"] = ["-- select --", "equals", "not equal to", "greater than", "less than", "less or equal", "greater or equal"];
+    
+    var fields = new Object();
+    <apex:repeat value="{!fieldTypes}" var="field">
+    fields["{!field.Name}"] = new Object();
+    fields["{!field.Name}"].typeName = "{!field.TypeName}";
+    fields["{!field.Name}"].picklistValues = new Array();
+    <apex:repeat value="{!field.PicklistValues}" var="picklistValue">
+    fields["{!field.Name}"].picklistValues.push("{!picklistValue}");
+    </apex:repeat>
+    </apex:repeat>
+    </script>
+    
+    <script language="JavaScript">
+
+    function compName(orig) {
+        return orig.replace(/:/g, "\\:");
+    }
+    
+    function setOperators(operatorFieldName, fieldName, plLookupId) {
+        if (fields[fieldName] == null) return;
+        var jqOperatorField = $j("#"+operatorFieldName.replace(/:/g, "\\:"));
+        var prevVal = jqOperatorField.val();
+        jqOperatorField.find('option').remove();
+        $j.each(operatorsByType[fields[fieldName].typeName], function(key, value) {   
+            jqOperatorField.
+                append($j("<option></option>").
+                attr("value",value).
+                text(value)); 
+        });
+        jqOperatorField.val(prevVal);
+        if (fields[fieldName].typeName == 'picklist') {
+        	$j("#" + plLookupId).css("display", "inline");
+        }
+        else {
+        	$j("#" + plLookupId).css("display", "none");
+        }
+    }
+    
+    var valueWidgetId;
+    
+    function openPicklistDialog(fieldWidgetId, valueWidgetId) {
+        window.valueWidgetId = compName(valueWidgetId);
+        var escapedName = "#" + compName(fieldWidgetId);
+        var fieldName = $j(escapedName).val();
+        var field = fields[fieldName];
+        var html = "";
+        for (var val in field.picklistValues) {
+            html += "<input type=\"checkbox\" id=\"plVal" + val + "\" value=\"" 
+            + field.picklistValues[val]+ "\"/> <label for=\"plVal" + val + "\">" 
+            + field.picklistValues[val] + "</label><br/>";
+        }
+        $j("#picklistDialog #picklistValues").empty();
+        $j("#picklistDialog #picklistValues").append(html);
+        $j("#picklistDialog").dialog({ 
+        	title: "Select picklist values", modal: true
+        });
+        
+    }
+    
+    $j(function() {
+        setOperators("{!$Component.operator1}", $j("#{!$Component.field1}".replace(/:/g, "\\:")).val(),
+        	"plLookup1");
+        setOperators("{!$Component.operator2}", $j("#{!$Component.field2}".replace(/:/g, "\\:")).val(),
+        	"plLookup2");
+        setOperators("{!$Component.operator3}", $j("#{!$Component.field3}".replace(/:/g, "\\:")).val(),
+        	"plLookup3");
+        setOperators("{!$Component.operator4}", $j("#{!$Component.field5}".replace(/:/g, "\\:")).val(),
+        	"plLookup4");
+        setOperators("{!$Component.operator4}", $j("#{!$Component.field5}".replace(/:/g, "\\:")).val(),
+        	"plLookup5");
+        
+        $j("#picklistDialogInsertSelectedButton").click(function() {
+        	var values = "";
+        	$j("#picklistValues input:checked").each(function(idx, element) {
+        		if (values.length > 0) values += ", ";
+        		values += element.value;
+        	});
+        	$j("#" + valueWidgetId).val(values);
+        	$j("#picklistDialog").dialog("destroy");
+        }); 
+    });
+
+    </script>
+    <table class="filterTable">
+        <tr>
+            <th>Field</th>
+            <th>Operator</th>
+            <th>Value</th>
+        </tr>
+        <tr>
+            <td>
+                <apex:selectList id="field1" size="1" value="{!criterion1.fieldName}"
+                    onchange="setOperators('{!$Component.operator1}', this.options[this.selectedIndex].value, 'plLookup1');">
+                    <apex:selectOptions value="{!fieldNameSelectOptions}" />
+                </apex:selectList>
+            </td>
+            <td>
+                <apex:selectList id="operator1" size="1" value="{!criterion1.operator}">
+                    <apex:selectOptions value="{!operatorSelectOptions}" />
+                </apex:selectList>
+            </td>
+            <td>
+                <apex:inputText id="value1" value="{!criterion1.value}" /> 
+            </td>
+            <td>
+                <span id="plLookup1" style="display: none;">
+                <a href="javascript:openPicklistDialog('{!$Component.field1}', '{!$Component.value1}');">
+                	<img src="/s.gif" class="lookupIcon2"/></a>
+               	</span>
+            </td>
+            <td>
+                And
+            </td>
+        </tr>
+        <tr>
+            <td>
+                <apex:selectList id="field2" size="1" value="{!criterion2.fieldName}"
+                    onchange="setOperators('{!$Component.operator2}', this.options[this.selectedIndex].value, 'plLookup2');">
+                    <apex:selectOptions value="{!fieldNameSelectOptions}" />
+                </apex:selectList>
+            </td>
+            <td>
+                <apex:selectList id="operator2" size="1" value="{!criterion2.operator}">
+                    <apex:selectOptions value="{!operatorSelectOptions}" />
+                </apex:selectList>
+            </td>
+            <td>
+                <apex:inputText id="value2" value="{!criterion2.value}" />
+            </td>
+            <td>
+                <span id="plLookup2" style="display: none;">
+                	<a href="javascript:openPicklistDialog('{!$Component.field2}', '{!$Component.value2}');">
+                	<img src="/s.gif" class="lookupIcon2"/></a>
+                </span>
+            </td>
+            <td>
+                And
+            </td>
+            
+        </tr>
+        <tr>
+            <td>
+                <apex:selectList id="field3" size="1" value="{!criterion3.fieldName}"
+                    onchange="setOperators('{!$Component.operator3}', this.options[this.selectedIndex].value, 'plLookup3');">
+                    <apex:selectOptions value="{!fieldNameSelectOptions}" />
+                </apex:selectList>
+            </td>
+            <td>
+                <apex:selectList id="operator3" size="1" value="{!criterion3.operator}">
+                    <apex:selectOptions value="{!operatorSelectOptions}" />
+                </apex:selectList>
+            </td>
+            <td>
+                <apex:inputText id="value3" value="{!criterion3.value}" />
+            </td>
+            <td>
+                <span id="plLookup3" style="display: none;">
+                	<a href="javascript:openPicklistDialog('{!$Component.field3}', '{!$Component.value3}');">
+                	<img src="/s.gif" class="lookupIcon2"/></a>
+                </span>
+            </td>
+            <td>
+                And
+            </td>
+            
+        </tr>
+        <tr>
+            <td>
+                <apex:selectList id="field4" size="1" value="{!criterion4.fieldName}"
+                    onchange="setOperators('{!$Component.operator4}', this.options[this.selectedIndex].value, 'plLookup4');">
+                    <apex:selectOptions value="{!fieldNameSelectOptions}" />
+                </apex:selectList>
+            </td>
+            <td>
+                <apex:selectList id="operator4" size="1" value="{!criterion4.operator}">
+                    <apex:selectOptions value="{!operatorSelectOptions}" />
+                </apex:selectList>
+            </td>
+            <td>
+                <apex:inputText id="value4" value="{!criterion4.value}" />
+            </td>
+            <td>
+                <span id="pllookup4" style="display: none;">
+                	<a href="javascript:openPicklistDialog('{!$Component.field4}', '{!$Component.value4}');">
+                	<img src="/s.gif" class="lookupIcon2"/></a>
+                </span>
+            </td>
+            <td>
+                And
+            </td>
+            
+        </tr>
+        <tr>
+            <td>
+                <apex:selectList id="field5" size="1" value="{!criterion5.fieldName}"
+                    onchange="setOperators('{!$Component.operator5}', this.options[this.selectedIndex].value, 'plLookup5');">
+                    <apex:selectOptions value="{!fieldNameSelectOptions}" />
+                </apex:selectList>
+            </td>
+            <td>
+                <apex:selectList id="operator5" size="1" value="{!criterion5.operator}">
+                    <apex:selectOptions value="{!operatorSelectOptions}" />
+                </apex:selectList>
+            </td>
+            <td>
+                <apex:inputText id="value5" value="{!criterion5.value}" />
+            </td>
+            <td>
+                <span id="plLookup5" style="display: none;">
+                	<a href="javascript:openPicklistDialog('{!$Component.field5}', '{!$Component.value5}');">
+                	<img src="/s.gif" class="lookupIcon2"/></a>
+                </span>
+            </td>
+        </tr>
+    </table>
+    <div id="picklistDialog" style="display: none">
+        <h2>Select the picklist values to add below.</h2>
+        <div id="picklistValues" style="padding: 10px 0px;">
+        </div>
+        <div>
+        	<input id="picklistDialogInsertSelectedButton" type="button" 
+        		value=" Insert Selected " class="btn" />
+        </div>
+    </div>
+</apex:component>

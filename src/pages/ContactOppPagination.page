@@ -1,0 +1,19 @@
+<apex:page standardController="Contact" extensions="sampleDetailPageCon">
+<style>
+.fewerMore { display: none;}
+</style>
+<apex:form >
+ <apex:pageMessages />
+ <apex:detail relatedList="true"></apex:detail>
+<apex:pageblock id="CustomList" title="Related Opportunities"  >
+   <apex:pageBlockTable value="{!oppz}" var="o">
+        <apex:column value="{!o.Name}"/>
+        <apex:column value="{!o.Account.Name}"/>
+        <apex:column value="{!o.Type}"/>
+       <apex:column value="{!o.Amount}"></apex:column>
+       <apex:column value="{!o.CloseDate}"/>
+   </apex:pageBlockTable>
+   <apex:outputLabel value="No records to display" styleClass="noRowsHeader"></apex:outputLabel>
+ </apex:pageblock>
+</apex:form>
+</apex:page>

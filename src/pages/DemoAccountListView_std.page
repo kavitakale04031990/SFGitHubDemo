@@ -1,0 +1,19 @@
+<apex:page standardController="Account" id="AccountListView_std" recordSetVar="Account">
+    <apex:form id="AccListView_stdcontroller">
+        <apex:pageBlock title="Account List View" id="pgblockAccListView">
+            <apex:pageBlockTable value="{! Account}" var="acc">
+                <apex:column value="{! acc.id}"/>
+                <apex:column headerValue="Account Name">
+                    <apex:outputLink value="/{! acc.id}">{! acc.name}</apex:outputLink> 
+                </apex:column> 
+                <apex:column value="{! acc.billingcity}"/>
+                <apex:column value="{! acc.phone}"/>
+            </apex:pageBlockTable>  
+            
+            <apex:panelGrid columns="2">
+                <apex:commandLink action="{!previous}">Previous</apex:commandLink>                       
+                <apex:commandLink action="{!next}">Next</apex:commandLink>    
+            </apex:panelGrid>
+        </apex:pageBlock>
+    </apex:form>
+</apex:page>

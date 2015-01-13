@@ -1,0 +1,38 @@
+<apex:page id="page1" standardController="WM2__MeetingMember__c" 
+    extensions="WM2.MeetingMemberWizardController" recordSetVar="members">
+<style type="text/css"> 
+/* 
+ *	Wanted to get SFDC VF Default theme to give me some spacing near the top of the page
+ */
+.apexDefaultPageBlock {
+	margin-top: 4px !important;
+}
+</style>
+<apex:form >
+<apex:includeScript value="https://ajax.googleapis.com/ajax/libs/jquery/1.4.2/jquery.min.js" />
+<apex:actionFunction name="init" action="{!init}" />
+<apex:outputPanel rendered="{! NOT(ISNULL(theInitAction)) }">
+<script language="javascript">
+$j = jQuery.noConflict();
+$j(function(){
+    init();
+});
+</script>
+</apex:outputPanel>
+
+<apex:pageBlock rendered="{! ISNULL(theInitAction) }"> 
+    <apex:pageMessages />
+    <div style="margin: 10px 0px;">
+        <apex:commandButton value="Continue" action="{!done}" />
+    </div>
+</apex:pageBlock>
+
+<apex:pageBlock rendered="{! theInitActionText = 'CREATE_INVITATIONS' }" title="Sending Invitations"> 
+    <div style="margin: 10px 0px;">
+        Please wait while your invitations are being sent...
+    </div>
+</apex:pageBlock>
+
+</apex:form>
+
+</apex:page>

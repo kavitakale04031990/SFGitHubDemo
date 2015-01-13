@@ -1,0 +1,53 @@
+<apex:page tabStyle="WebMeeting__tab" controller="WM2.MeetingsTabController" action="{!init}">
+	<apex:includeScript value="https://ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js" />
+	<script type="text/javascript">
+var $j = jQuery.noConflict();
+</script>
+	<style type="text/css">
+.rich-tab-header {
+	cursor: pointer;
+}
+
+.x-grid3-td-checkbox {
+	display: none;
+}
+
+.rich-tab-active {
+	background-image:
+		url("{!URLFOR($Resource.meetingsr, 'wm_tab_gradient_grey_active.png')}");
+}
+
+.rich-tab-inactive,.rich-tab-disabled {
+	background-image:
+		url("{!URLFOR($Resource.meetingsr, 'wm_tab_gradient_grey_inactive.png')}");
+	color: #000;
+}
+</style>
+	<!-- Leaving tabs active when user settings aren't available causes an issue with switching tabs, Jordan, 3/29/2012 -->
+	<apex:tabPanel value="{!ActiveTab}">
+		<apex:tab label="Meetings" name="meetings"
+			rendered="{!$User.WebMeeting_User__c = TRUE}">
+			<apex:enhancedList type="Meeting__c" height="600" rowsPerPage="25" />
+		</apex:tab>
+		<apex:tab label="Recordings" name="recordings"
+			rendered="{!$User.WebMeeting_User__c = TRUE}">
+			<apex:enhancedList type="Recording__c" height="600" rowsPerPage="25" />
+		</apex:tab>
+		<apex:tab label="Conference Center" name="conferenceCenterTab">
+			<apex:pageBlock >
+				<div style="text-align:center;">
+					<a href="{!ccURL}" target="_blank">Click here</a> to open Conference Center in a new window.
+				</div>
+			</apex:pageBlock>
+			<apex:iframe src="{!ccUrl}" scrolling="true" />
+		</apex:tab>
+		<apex:tab label="Settings" name="settingsTab"
+			rendered="{!$User.WebMeeting_User__c = TRUE}">
+			<apex:include pageName="{!SettingsPage}" />
+		</apex:tab>
+		<apex:tab label="Global Settings" name="globalSettingsTab"
+			rendered="{!MeetingsAdministrator}">
+			<apex:include pageName="WM2__GlobalSettings" />
+		</apex:tab>
+	</apex:tabPanel>
+</apex:page>

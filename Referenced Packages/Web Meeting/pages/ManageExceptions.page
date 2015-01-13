@@ -1,0 +1,5 @@
+<apex:page standardController="WM2__Meeting__c">
+	<apex:sectionHeader title="{!WM2__Meeting__c.Name}"
+		subtitle="Registrant Matching" />
+	<apex:outputLink value="/{!WM2__Meeting__c.Id}">&lt; Back to {!WM2__Meeting__c.Name}</apex:outputLink>
+</apex:page>

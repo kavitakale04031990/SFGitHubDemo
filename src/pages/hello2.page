@@ -1,0 +1,16 @@
+<apex:page sidebar="true" showHeader="true" standardController="Account">
+  <!-- Begin Default Content REMOVE THIS -->
+  <h1>Congratulations</h1>
+  This is your second page
+  <apex:form >
+      <apex:pageBlock title="Page Block">
+          <apex:pageBlockSection title="Page Block Section" columns="2">
+              <apex:inputField value="{!account.name}"/>
+              <apex:inputField value="{!account.site}"/>
+              <apex:inputField value="{!account.type}"/>
+              <apex:inputField value="{!account.accountNumber}" required="true"/>
+          </apex:pageBlockSection>
+      </apex:pageBlock>
+  <!-- End Default Content REMOVE THIS -->
+  </apex:form>
+</apex:page>

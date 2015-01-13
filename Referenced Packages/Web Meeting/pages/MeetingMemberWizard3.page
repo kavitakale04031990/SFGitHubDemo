@@ -1,0 +1,99 @@
+<apex:page id="page1" standardController="WM2__MeetingMember__c" 
+    extensions="WM2.MeetingMemberWizardController" recordSetVar="members">
+<apex:includeScript value="https://ajax.googleapis.com/ajax/libs/jquery/1.4.2/jquery.min.js" />
+<style type="text/css"> 
+/* 
+ *	Wanted to get SFDC VF Default theme to give me some spacing near the top of the page
+ */
+.apexDefaultPageBlock {
+	margin-top: 4px !important;
+}
+</style>
+<script type="text/javascript">
+
+$j = jQuery.noConflict();
+$j(function() {
+    $j("#selectAll").click(function() {
+        $j("#{!$component.page1.form1.pageBlock1.pBT}".replace(/:/g, "\\:")+" :checkbox").attr("checked", "checked");
+    });
+    $j("#selectNone").click(function() {
+        $j("#{!$component.page1.form1.pageBlock1.pBT}".replace(/:/g, "\\:")+" :checkbox").removeAttr("checked");
+    });
+    
+});
+</script>   
+<apex:form id="form1">
+    <apex:pageBlock id="pageBlock1">
+        <!-- <apex:outputField value="{!DummyCampaignMember.CampaignId}" /> -->
+        <h1 style="padding-bottom: 10px; display: block; font-size: 140%;">
+            Meeting: <apex:outputText value="{!Meeting.Name}" />
+        </h1>
+        <apex:outputText value="{0} of {1} records selected." rendered="{!QueryResultSize < 10000}">
+            <apex:param value="{!QuantitySelected}" />
+            <apex:param value="{!QueryResultSize}" />
+        </apex:outputText> 
+        <apex:outputText value="Query exceeded {0} records. Only first {0} are shown." rendered="{!QueryResultSize >= 10000}">
+            <apex:param value="{!QueryResultSize}" />
+        </apex:outputText> 
+        <div style="text-align: right; padding-top: 10px; float:right;">
+            <apex:commandButton value=" Add and Invite to Meeting " action="{!addAndInvitePeople}" />
+            <apex:commandButton value=" Add to Meeting " action="{!addPeople}" />
+            <apex:commandButton value=" Cancel " action="{!cancel}" />
+        </div>
+        <p style="padding-bottom: 5px;"><a href="#" id="selectAll">select all</a> | <a href="#" id="selectNone">select none</a></p> 
+        <apex:pageBlockTable id="pBT" value="{!personChoices}" var="choice">
+            <apex:column id="selectedColumn" headerValue="">
+                <apex:inputCheckbox id="selectedCheckbox" value="{!choice.Selected}" />
+            </apex:column>
+            <apex:column >
+                <apex:facet name="header">
+                    <apex:commandLink action="{!step3}" 
+                        value="First{!IF(sortExpression=='FirstName',IF(sortDirection='ASC','▲','▼'),'')}" >
+                        <apex:param value="FirstName" name="column" assignTo="{!sortExpression}" ></apex:param>
+                    </apex:commandLink>
+                </apex:facet>
+                <apex:outputText value="{!choice.FirstName}" />
+            </apex:column>
+            <apex:column >
+                <apex:facet name="header">
+                    <apex:commandLink action="{!step3}" 
+                        value="Last{!IF(sortExpression=='LastName',IF(sortDirection='ASC','▲','▼'),'')}" >
+                        <apex:param value="LastName" name="column" assignTo="{!sortExpression}" ></apex:param>
+                    </apex:commandLink>
+                </apex:facet>
+                <apex:outputText value="{!choice.LastName}" />
+            </apex:column>
+            <apex:column >
+                <apex:facet name="header">
+                    <apex:commandLink action="{!step3}" 
+                        value="Email{!IF(sortExpression=='Email',IF(sortDirection='ASC','▲','▼'),'')}" >
+                        <apex:param value="Email" name="column" assignTo="{!sortExpression}" ></apex:param>
+                    </apex:commandLink>
+                </apex:facet>
+                <apex:outputText value="{!choice.Email}" />
+            </apex:column>
+            <apex:column headerValue="Phone" value="{!choice.Phone}" />
+            <apex:column rendered="{!NOT(contactRecord)}">
+                <apex:facet name="header">
+                    <apex:commandLink action="{!step3}" 
+                        value="Company{!IF(sortExpression=='Company',IF(sortDirection='ASC','▲','▼'),'')}" >
+                        <apex:param value="Company" name="column" assignTo="{!sortExpression}" ></apex:param>
+                    </apex:commandLink>
+                </apex:facet>
+                <apex:outputText value="{!choice.Company}" />
+            </apex:column>
+        </apex:pageBlockTable>
+        <div style="float: left; width: 200px; padding-top: 10px;">
+            <apex:selectList rendered="{!PageSelectOptions.size > 1}" size="1" value="{!pageNumber}" onchange="this.form.submit();" >
+                <apex:selectOptions value="{!PageSelectOptions}"/>
+            </apex:selectList>
+        </div>
+        <div style="text-align: right; padding-top: 10px;">
+            <apex:commandButton value=" Add and Invite to Meeting " action="{!addAndInvitePeople}" />
+            <apex:commandButton value=" Add to Meeting " action="{!addPeople}" />
+            <apex:commandButton value=" Cancel " action="{!cancel}" />
+        </div> 
+    </apex:pageBlock>
+</apex:form>
+
+</apex:page>

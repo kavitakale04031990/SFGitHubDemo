@@ -1,0 +1,30 @@
+<apex:page standardController="Account" extensions="AccountRelatedContactPagination_v1">
+<style>
+.fewerMore { display: none;}
+</style>
+<apex:detail relatedList="true"></apex:detail>
+      <apex:form >
+          <apex:pageBlock id="pbac" title="Contacts">
+              <apex:pageblockTable value="{!AccountsRelatedContacts}" var="a">
+                      
+                     <apex:column title="Name" headerValue="Name">
+                             <apex:outputLink target="_blank" value="https://ap1.salesforce.com/{!a.id}">{!a.Name}</apex:outputLink>
+                     </apex:column>
+                      <apex:column value="{!a.id}"/>   
+              </apex:pageblockTable>
+              
+              <apex:panelGrid columns="7">
+                <apex:commandButton status="fetchStatus" reRender="pb" value="|<" action="{!first}" disabled="{!!hasPrevious}" title="First Page"/>
+                <apex:commandButton status="fetchStatus" reRender="pb" value="<" action="{!previous}" disabled="{!!hasPrevious}" title="Previous Page"/>
+                <apex:commandButton status="fetchStatus" reRender="pb" value=">" action="{!next}" disabled="{!!hasNext}" title="Next Page"/>
+                <apex:commandButton status="fetchStatus" reRender="pb" value=">|" action="{!last}" disabled="{!!hasNext}" title="Last Page"/>
+                <apex:outputText >{!(pageNumber * size)+1-size}-{!IF((pageNumber * size)>noOfRecords, noOfRecords,(pageNumber * size))} of {!noOfRecords}</apex:outputText>
+                <apex:commandButton status="fetchStatus" reRender="pb" value="Refresh" action="{!refresh}" title="Refresh Page"/>
+                <apex:outputPanel style="color:#4AA02C;font-weight:bold">
+                    <apex:actionStatus id="fetchStatus" startText="Fetching..." stopText=""/>
+                </apex:outputPanel>
+            </apex:panelGrid>
+          </apex:pageBlock>
+      </apex:form>
+      
+</apex:page>

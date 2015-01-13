@@ -1,0 +1,18 @@
+<apex:page standardController="Lead" extensions="searchLeadsByCompany">
+    <apex:form id="leadsByCompany">     
+        <apex:messages />
+        <apex:pageBlock id="pgLeadsByCompany" title="Search Leads By Company"> 
+           <apex:inputText id="searchLead" value="{!searchLead}"/>            
+           <apex:commandButton id="searchButton" action="{!Search}" title="Search" value="Search" />
+           <apex:commandButton id="closedConverted" action="{!closedConverted}" title="closedConverted" value="Closed - Converted" />    
+            <apex:pageBlockTable id="searchLeadsResult" title="Search Result" value="{!leadList}" var="loop" >
+                <apex:column title="Name">
+                    <apex:outputLink target="_blank" value="https://ap1.salesforce.com/{!loop.id}">{!loop.Name}</apex:outputLink>
+                </apex:column>
+                
+                <apex:column value="{!loop.id}"/>
+                <apex:column value="{!loop.company}"/>
+            </apex:pageBlockTable>
+        </apex:pageBlock>               
+    </apex:form>
+</apex:page>

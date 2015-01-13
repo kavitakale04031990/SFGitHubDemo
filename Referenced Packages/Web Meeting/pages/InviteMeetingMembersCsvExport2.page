@@ -1,0 +1,7 @@
+<apex:page standardController="WM2__Meeting__c"
+	extensions="WM2.MeetingMemberCSVController"
+	contentType="text/csv" cache="true">Name,Email
+    <apex:repeat value="{!meetingMembersToExportList}" var="member">
+        {!member.Name},{!member.WM2__Email__c}
+    </apex:repeat>
+</apex:page>

@@ -1,0 +1,9 @@
+<apex:page standardController="Position__c">
+    
+  <!-- Begin Default Content REMOVE THIS -->
+  <h1>Congratulations</h1>
+  This is your new Page: CandidateMap
+  <!-- End Default Content REMOVE THIS -->
+  
+  This map shows the locations of candidates who have applied for the <b> {!Position__c.Name} </b> position.
+</apex:page>

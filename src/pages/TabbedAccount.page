@@ -1,0 +1,24 @@
+<apex:page showHeader="true" tabStyle="account" standardController="Account">
+    <apex:tabPanel id="tabbedAccounttabPanel" tabClass="activeTab" inactiveTabClass="inactiveTab" selectedTab="tabDetail">
+        <apex:tab id="tabDetail" label="Details" name="AccDetails">
+            <apex:detail relatedList="false" title="true"/>
+        </apex:tab>
+        
+       <apex:tab id="tabContact" name="Contacts" label="Contacts">
+           <apex:relatedList id="accContactRelatedList" subject="{! Account}" list="Contacts"/>
+       </apex:tab>
+       
+       <apex:tab id="tabOpportunity" name="Opportunity" label="Opportunities">
+           <apex:relatedList id="accOppRelatedList" subject="{!Account}" list="Opportunities"/>
+       </apex:tab>
+       
+       <apex:tab label="Open Activities" name="OpenActivities" id="tabOpenAct">
+            <apex:relatedList subject="{!account}" list="OpenActivities" />
+        </apex:tab>
+       
+        <apex:tab label="Notes and Attachments" name="NotesAndAttachments" id="tabNoteAtt">
+            <apex:relatedList subject="{!account}" list="CombinedAttachments" />
+        </apex:tab>
+        
+     </apex:tabPanel>    
+</apex:page>

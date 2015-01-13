@@ -1,0 +1,43 @@
+<apex:page sidebar="false" standardController="Account">
+    <apex:pageBlock title="My Content"> 
+        <apex:pageBlockSection title="A Section Title">   
+            <p> Hello {!$User.FirstName &' '& $User.LastName}</p>
+            <p> You are viewing the {! account.name} account </p>
+            <p> Ticker symbol is {! account.TickerSymbol}</p>
+            <p> Account owner is {! account.Owner.name}</p>
+        </apex:pageBlockSection> 
+        
+     <!--    <apex:pageBlockSection title="A New Section">
+            <p> Today's Date is: {! TODAY()} </p>
+            <p> Date after seven days would be: {! TODAY() + 7} </p>
+            <p> Year is: {! YEAR(TODAY())} </p>
+            <p> Tomorrow would be day number : {! DAY(TODAY() + 1)} </p>
+            <p> The square root of 49 is: {! SQRT(49)} </p>
+            <p> Is it true: {! CONTAINS('salesforce.com', 'force.com')} </p>
+            <p> Is it true: {! if(CONTAINS('salesforce.com', 'force.com'), 'Yep', 'Nah')} </p>
+            <p> Is it true: {! if(DAY(TODAY()) > 14, 'After the 14th', 'On or Before 14th')} </p>
+        </apex:pageBlockSection>  -->
+        
+     <!--   <apex:pageBlockSection title="A Section Title">   
+           <apex:detail />
+        </apex:pageBlockSection> -->
+   
+             <apex:pageBlockSection title="Custom Section Title">   
+                <apex:outputField value="{! account.name}"/>
+                <apex:outputField value="{! account.Owner.name}"/>  
+             </apex:pageBlockSection>
+        </apex:pageBlock> 
+    
+        <apex:pageBlock title="My Account Contacts">
+            <apex:pageBlockTable value="{! account.contacts}" var="item">
+                <apex:column value="{! item.name}"/>
+                <apex:column value="{! item.phone}"/>
+            </apex:pageBlockTable>
+        </apex:pageBlock>
+        
+        <apex:outputLink value="http://developer.force.com">Click to refer to a link</apex:outputLink>
+                <apex:outputLink value="{! $Page.hello2}">Click to refer to a page</apex:outputLink>
+        
+      
+        
+</apex:page>

@@ -1,0 +1,159 @@
+<apex:page id="page" standardController="WM2__Meeting__c"
+	extensions="WM2.MeetingController" tabStyle="WebMeeting__tab"
+	action="{!initDetail}">
+	<apex:form >
+		<apex:inputHidden value="{!WM2__Meeting__c.WM2__LeadOwnerId__c}" />
+		<apex:inputHidden value="{!WM2__Meeting__c.WM2__Passcode__c}" />
+		<apex:inputHidden value="{!WM2__Meeting__c.WM2__MeetingID__c}" />
+		<apex:inputHidden value="{!WM2__Meeting__c.WM2__MeetingURL__c}" />
+		<apex:inputHidden value="{!WM2__Meeting__c.WM2__LastSyncStarted__c}" />
+		<apex:inputHidden value="{!WM2__Meeting__c.WM2__TollFreeNumber__c}" />
+		<apex:inputHidden value="{!WM2__Meeting__c.WM2__EncodedMeetingID__c}" />
+	</apex:form>
+
+	<apex:includeScript value="https://ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js" />
+	<apex:includeScript value="https://ajax.googleapis.com/ajax/libs/jqueryui/1.8.16/jquery-ui.min.js" />
+	<apex:stylesheet value="https://ajax.googleapis.com/ajax/libs/jqueryui/1.8.16/themes/redmond/jquery-ui.css" />
+	<script type="text/javascript">
+var urlOfMeeting = 'https://core.callinfo.com/interface/applet.jsp?an={!JSENCODE(Meeting__c.TollFreeNumber__c)}&ac={!JSENCODE(Meeting__c.AccessCode__c)}&pc={!JSENCODE(SettingsModel.PassCode)}&host=globalcrossing&ev={!JSENCODE(Meeting__c.EncodedMeetingId__c)}';
+</script>
+	<apex:outputText rendered="{! NOT(CanUpdate)}">
+		<script type="text/javascript">
+$(function() {
+    $('input[name="addmeetingmembers"], input[name="invitemeetingmembers"]').hide();
+});
+</script>
+	</apex:outputText>
+		<apex:outputPanel rendered="{!noGlobalSettingsFlag}">
+		<apex:pageBlock >
+				No settings have been established for Web Meeting. Please ask your administrator to vist the "Global Settings" subtab under the Web Meeting application. <a
+				href="{!URLFOR($Page.MeetingsTab)}">&#171; Go back</a>
+		</apex:pageBlock>
+	</apex:outputPanel>
+	<apex:outputPanel rendered="{!NOT(noGlobalSettingsFlag)}">
+	<apex:form id="form">
+		<apex:sectionHeader title="Web Meeting" subtitle="{!WM2__Meeting__c.Name}" />
+		<div class="breadcrumb">
+			<apex:outputLink value="{!URLFOR($Page.WM2__MeetingsTab)}?tabOverride=meetings">« Back to Meetings</apex:outputLink>
+		</div>
+		<apex:pageMessages />
+		<apex:pageBlock id="pageBlock">
+			<apex:pageBlockButtons >
+				<apex:commandButton value=" Edit " action="{!edit}" />
+				<apex:commandButton value=" Delete " action="{!del}"
+					onclick="return confirmDeleteCustom();" rendered="{!CanDelete}" />
+				<apex:commandButton value=" Sync with Web Meeting " action="{!sync}" />
+				<apex:outputPanel rendered="{!(WM2__Meeting__c.WM2__CCMeetingStatus__c != 'Closed' && WM2__Meeting__c.WM2__CCMeetingStatus__c != 'Cancelled' && WM2__Meeting__c.WM2__CCMeetingStatus__c != 'Draft' && WM2__Meeting__c.WM2__EncodedMeetingID__c != '')}">
+					<input type="button" class="btn" value="Start Meeting"
+						onclick=" javascript:window.open(urlOfMeeting,'_blank'); " />
+				</apex:outputPanel>
+			</apex:pageBlockButtons>
+			<apex:pageBlockSection id="informationSection" title="Information">
+				<apex:outputField value="{!WM2__Meeting__c.Name}" />
+				<apex:pageBlockSectionItem > &nbsp; </apex:pageBlockSectionItem>
+				<apex:outputField value="{!WM2__Meeting__c.WM2__Campaign__c}" />
+				<apex:pageBlockSectionItem >
+					<apex:outputLabel value="Access Code" />
+					<apex:outputPanel >
+						<apex:outputField value="{!WM2__Meeting__c.WM2__AccessCode__c}" />
+					</apex:outputPanel>
+				</apex:pageBlockSectionItem>
+				<apex:outputField value="{!WM2__Meeting__c.WM2__AllowOthersToInvite__c}" />
+				<apex:pageBlockSectionItem >
+					<apex:outputLabel value="Meeting Type" />
+					<apex:outputField value="{!WM2__Meeting__c.WM2__Meeting_Type__c}" />
+				</apex:pageBlockSectionItem>
+				<apex:pageBlockSectionItem >
+					<apex:outputLabel value="Automatically Create New Leads" />
+					<apex:outputField value="{!WM2__Meeting__c.WM2__CreateNewLeads__c}" />
+				</apex:pageBlockSectionItem>
+				<apex:pageBlockSectionItem id="leadAssignmentSectionItem">
+					<apex:outputLabel value="Lead Assignment" />
+					<apex:outputPanel id="leadAssignmentPanel">
+                    {!WM2__Meeting__c.WM2__LeadAssignmentBehavior__c}
+                </apex:outputPanel>
+				</apex:pageBlockSectionItem>
+				<apex:pageBlockSectionItem >
+					<apex:outputLabel >Lead Source</apex:outputLabel>
+                {!WM2__Meeting__c.WM2__LeadSource__c}
+            </apex:pageBlockSectionItem>
+				<apex:outputField value="{!WM2__Meeting__c.LastModifiedDate}" />
+				<apex:outputField value="{!WM2__Meeting__c.LastModifiedById}" />
+				<apex:outputField value="{!WM2__Meeting__c.OwnerId}" />
+				<apex:repeat value="{!$ObjectType.WM2__Meeting__c.FieldSets.WM2__CustomerFields}" var="f">
+					<apex:outputField value="{!WM2__Meeting__c[f]}" />
+				</apex:repeat>
+			</apex:pageBlockSection>
+			<apex:pageBlockSection id="addtitionalInformationSection"
+				title="Meeting Details">
+				<apex:outputField value="{!WM2__Meeting__c.Name}" />
+				<apex:outputField value="{!WM2__Meeting__c.WM2__MeetingTimeNative__c}" />
+				<apex:outputField value="{!WM2__Meeting__c.WM2__HostName__c}" />
+				<apex:outputField value="{!WM2__Meeting__c.WM2__Duration__c}" />
+				<apex:outputField value="{!WM2__Meeting__c.WM2__RegistrationURL__c}" />
+				<apex:outputField value="{!WM2__Meeting__c.WM2__MeetingType__c}" />
+				<apex:pageBlockSectionItem >
+					<apex:outputLabel value="View Meeting Details" />
+					<apex:commandLink value="View" action="{!viewMeetingDetails}" />
+				</apex:pageBlockSectionItem>
+				<apex:outputField value="{!WM2__Meeting__c.WM2__CCMeetingStatus__c}" />
+			</apex:pageBlockSection>
+			<apex:pageBlockSection title="Meeting Member Summary">
+				<apex:pageBlockSectionItem >
+					<apex:outputLabel value="New" />
+					<apex:outputField value="{!WM2__Meeting__c.WM2__NewMeetingMembers__c}" />
+				</apex:pageBlockSectionItem>
+				<apex:pageBlockSectionItem >
+					<apex:outputLabel value="Pending" />
+					<apex:outputField value="{!WM2__Meeting__c.WM2__PendingMeetingMembers__c}" />
+				</apex:pageBlockSectionItem>
+				<apex:pageBlockSectionItem >
+					<apex:outputLabel value="Invited" />
+					<apex:outputField value="{!WM2__Meeting__c.WM2__InvitedMeetingMembers__c}" />
+				</apex:pageBlockSectionItem>
+				<apex:pageBlockSectionItem >
+					<apex:outputLabel value="Declined" />
+					<apex:outputField value="{!WM2__Meeting__c.WM2__DeclinedMeetingMembers__c}" />
+				</apex:pageBlockSectionItem>
+				<apex:pageBlockSectionItem >
+					<apex:outputLabel value="Confirmed" />
+					<apex:outputField value="{!WM2__Meeting__c.WM2__ConfirmedMeetingMembers__c}" />
+				</apex:pageBlockSectionItem>
+				<apex:pageBlockSectionItem >
+					<apex:outputLabel value="Email Failure: Opt-Out" />
+					<apex:outputField value="{!WM2__Meeting__c.WM2__OptOutMeetingMembers__c}" />
+				</apex:pageBlockSectionItem>
+				<apex:pageBlockSectionItem >
+					<apex:outputLabel value="Attended" />
+					<apex:outputField value="{!WM2__Meeting__c.WM2__AttendedMeetingMembers__c}" />
+				</apex:pageBlockSectionItem>
+				<apex:pageBlockSectionItem >
+					<apex:outputLabel value="Email Failure: Address Error" />
+					<apex:outputField value="{!WM2__Meeting__c.WM2__BadEmailMeetingMembers__c}" />
+				</apex:pageBlockSectionItem>
+				<apex:pageBlockSectionItem >
+					<apex:outputLabel value="Unmatched Registrants" />
+					<apex:outputPanel layout="none">
+						<apex:outputText rendered="{!WM2__Meeting__c.WM2__UnmatchedRegistrants__c = 0}" value="{0}">
+							<apex:param value="{!WM2__Meeting__c.WM2__UnmatchedRegistrants__c}" />
+						</apex:outputText>
+						<apex:outputText rendered="{!WM2__Meeting__c.WM2__UnmatchedRegistrants__c <> 0}"
+							style="color: red;" value="{0,number,integer}">
+							<apex:param value="{!WM2__Meeting__c.WM2__UnmatchedRegistrants__c}" />
+						</apex:outputText>
+						<apex:commandLink action="{!manageRegistrations}"
+							value="Manage Registrations"
+							style="font-size: 90%; color: #999; margin-left: 10px" />
+					</apex:outputPanel>
+				</apex:pageBlockSectionItem>
+			</apex:pageBlockSection>
+		</apex:pageBlock>
+	</apex:form>
+	<apex:relatedList list="Meeting_Members__r" />
+	<script type="text/JavaScript">
+function confirmDeleteCustom() {
+    return confirm("Are you sure you want to delete this meeting? This will not cancel the meeting in Conference Center.");
+}
+</script>
+</apex:outputPanel>
+</apex:page>

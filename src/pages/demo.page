@@ -1,0 +1,6 @@
+<apex:page standardController="Account">
+<apex:sectionHeader title="Account" subtitle="{!Account.name}"/>
+<apex:pageBlock title="Account">
+
+</apex:pageBlock>
+</apex:page>

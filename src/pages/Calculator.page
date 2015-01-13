@@ -1,0 +1,46 @@
+<!-- http://salesforce.stackexchange.com/questions/22386/how-to-calculate-the-row-values-in-apexrepeat 
+http://salesforce.stackexchange.com/questions/20563/to-achieve-grand-total-for-the-retrieved-column-in-a-datatable-generated-using-s 
+-->
+
+<apex:page id="ProductCalculator" controller="ProductCalculator">
+
+    <apex:variable value="{!0}" var="total2"/>
+
+  <apex:pageBlock id="pbProdCalc">
+      <apex:form id="fProdCalc">
+          <apex:pageMessages id="msg"></apex:pageMessages>
+          <apex:dataTable id="dtProdCalc" columns="4" value="{!productData}" var="con" styleclass="list">
+              <apex:column id="prodList" headerValue="Product">
+                  <apex:selectList id="slProdList" size="1" multiselect="false" value="{!con.prod}">
+                      <apex:selectOptions id="soProdList" value="{!con.items}"/>
+                  </apex:selectList>
+              </apex:column>
+              <apex:column id="prodQuantity" headerValue="Quantity">
+                     <apex:inputText id="Qty" value="{!con.quantity}">
+                         <apex:actionSupport action="{!con.calculateTotal}" event="onchange" rendered="{!con.prodPrice != null}"/>
+                     </apex:inputText>
+              </apex:column>
+              <apex:column id="prodPrice" headerValue="Price">
+                  <apex:inputText id="Price" value="{!con.prodPrice}">
+                      <apex:actionSupport action="{!con.calculateTotal}" event="onchange"/>
+                  </apex:inputText>
+              </apex:column>
+              <apex:column id="prodTotal" headerValue="Amount">              
+                 <apex:outputText id="Total" value="{!con.prodTotal}"/>                   
+                  <apex:variable var="total2" value="{!total2 + con.prodTotal}" id="testId"/> 
+                  <apex:facet name="footer"> 
+                        Total: <span class="t2"></span>                 
+                  </apex:facet>           
+              </apex:column>
+          </apex:dataTable>
+         <apex:commandButton value="Add Product" action="{!addRow}"/>     
+    <!--      <apex:commandButton value="Remove Product" action="{!removeRow}" reRender="dtProdCalc"/>  -->
+             
+         <apex:outputText ></apex:outputText>
+         
+      </apex:form>
+  </apex:pageBlock>
+  <script>
+    document.getElementsByClassName('t2')[0].innerHTML = '{!ROUND(total2,0)}';
+</script>
+</apex:page>

@@ -1,0 +1,53 @@
+<apex:page controller="contactController" showHeader="true" tabStyle="Contact">
+
+     <apex:form >
+
+        <apex:selectList id="chooseColor" value="{!string}" size="1" >
+            <apex:selectOption itemValue="detail" itemLabel="Detail"/>
+            <apex:selectOption itemValue="history" itemLabel="History"/>
+            <apex:selectOption itemValue="opentasks" itemLabel="Open Activities"/>
+           <strong><font color="#FF0000"> <apex:actionSupport event="onchange" action="{!test}" reRender="out"/></font></strong>
+        </apex:selectList> 
+        
+    <!--  <apex:commandButton value="Test" action="{!test}" rerender="out" status="status,detail"/>      -->  
+        
+     <apex:outputPanel id="out">
+        <apex:actionstatus id="status" startText="testing...">
+            <apex:facet name="stop">
+                <apex:outputPanel >
+                    <p>You have selected:</p>
+                    {!string}
+                </apex:outputPanel>
+            </apex:facet>
+        </apex:actionstatus>
+     </apex:outputPanel>                
+                        
+    <apex:dataTable value="{!contacts}" var="c" cellpadding="4" border="1">
+      <apex:column >
+        <apex:facet name="header"><b>Name</b></apex:facet>
+        
+        <apex:commandLink reRender="detail">{!c.name}
+          <apex:param name="id" value="{!c.id}"/>
+        </apex:commandLink>
+      </apex:column>
+      
+      <apex:column >
+        <apex:facet name="header"><b>Account Name</b></apex:facet>
+        {!c.account.name}
+      </apex:column>
+    </apex:dataTable>
+
+</apex:form>  
+  
+  <apex:outputPanel id="detail" >
+    <apex:detail subject="{!contact}" title="false" relatedList="false" rendered="{!string == 'detail'}" />
+    
+    <apex:relatedList list="ActivityHistories"  subject="{!contact}" rendered="{!string == 'history'}"/>
+    
+    <apex:relatedList list="OpenActivities"  subject="{!contact}" rendered="{!string == 'opentasks'}"/>
+    
+  </apex:outputPanel>
+  
+
+
+</apex:page>

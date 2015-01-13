@@ -1,0 +1,34 @@
+<apex:page controller="contacts">       
+   <apex:panelGrid columns="1" id="theGrid" width="50%" >            
+      <apex:pageBlock >            
+         <apex:form >                
+            <apex:dataTable value="{!Contacts}" var="con" styleClass="list">                          
+               <apex:column >                                     
+                  <apex:facet name="header">      
+                     <apex:inputCheckbox />     
+                  </apex:facet>            
+                  <apex:inputCheckbox value="{!con.selected}" />
+               </apex:column>   
+               <apex:column headerValue="Name">
+                  <apex:outputText value="{!con.contact.Name}"/>
+               </apex:column>
+               <apex:column headerValue="Phone">
+                  <apex:outputText value="{!con.contact.Phone}"/>
+               </apex:column>
+               <apex:column headerValue="Mailing City">
+                  <apex:outputText value="{!con.contact.MailingCity}"/>
+               </apex:column>
+               <apex:column headerValue="Email">
+                  <apex:outputText value="{!con.contact.Email}"/>
+               </apex:column>
+               <apex:column headerValue="Email Type">
+                  <apex:selectList value="{!con.emailType}" size="1">
+                     <apex:selectOptions value="{!con.emails}"/>
+                  </apex:selectList>
+               </apex:column>
+                                          
+            </apex:dataTable>                  
+         </apex:form>               
+      </apex:pageBlock>
+    </apex:panelGrid> 
+</apex:page>

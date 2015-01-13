@@ -1,0 +1,54 @@
+<apex:page controller="Class_Product_Calculator" >
+    <!-- Site refered for total count:
+    http://salesforce.stackexchange.com/questions/22386/how-to-calculate-the-row-values-in-apexrepeat-->
+    <apex:variable value="{!0}" var="total2"/>
+    <apex:pageBlock mode="edit" title="Product Calculator">
+                 <apex:form >
+                     
+                  <apex:dataTable border="1" id="productTable" var="ProductListVar" value="{!ProductsData}" >
+                    <apex:column > 
+                       
+                        
+                    <apex:facet name="header" >Item</apex:facet>
+           <apex:selectList id="productSelector" size="1" multiselect="false">
+                <apex:selectOptions value="{!ProductListVar.ProductItems}" />
+          </apex:selectList> 
+                    
+                    </apex:column>
+                    <apex:column >
+                         <apex:facet name="header" >Quantity</apex:facet>
+                        <apex:inputText id="quantity" value="{!ProductListVar.quantity}">
+                           <!--<apex:actionSupport event="onchange" action="{!ProductListVar.calculateTotal}"/>-->
+                        </apex:inputText>
+                    </apex:column>
+                    <apex:column >
+                         <apex:facet name="header" >Amount</apex:facet>
+                        <apex:inputText id="amount" value="{!ProductListVar.amount}" >
+                            <apex:actionSupport event="onblur" action="{!ProductListVar.calculateTotal}"/>
+                        </apex:inputText>
+                    </apex:column>
+                    <apex:column colspan="2" >
+                         <apex:facet name="header"> Total
+                        </apex:facet>
+                        <apex:outputText id="total" value="{!ProductListVar.total}"/>
+                         <apex:variable var="total2" value="{!total2 + ProductListVar.total}" />
+                         <apex:facet name="footer"> 
+                             Total Amount:  <span class="t1"/>
+                        </apex:facet>
+                      </apex:column>
+                         
+                </apex:dataTable>
+                       <apex:commandLink value="Add Product" action="{!getMyDataTable}" reRender="productTable"/> 
+                        <apex:outputText > |                      </apex:outputText>
+                     
+                     <apex:commandLink value="Remove All Product" action="{!removeMyDataTable}" reRender="productTable"/> 
+            </apex:form>
+  
+    </apex:pageBlock>
+    <script>
+    document.getElementsByClassName('t1')[0].innerHTML = '{!ROUND(total2,0)}';
+    
+       
+    
+</script>
+</apex:page>

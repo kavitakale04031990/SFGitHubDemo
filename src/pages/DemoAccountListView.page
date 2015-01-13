@@ -1,0 +1,16 @@
+<apex:page controller="MyAccountController">
+     <apex:form id="myForm">            
+        <apex:pageBlock title="Accounts List View">        
+           <apex:pageBlockTable value="{! myAccounts}" var="item1">
+                <apex:column value="{!item1.id}"/>                                     
+                <apex:column headerValue="Account Name"> 
+                     <apex:outputLink value="/{!item1.id}">{!item1.name}</apex:outputLink> 
+                </apex:column> 
+                <apex:column value="{!item1.accountnumber}"/> 
+                <apex:column value="{!item1.billingcity}"/> 
+                <apex:column value="{!item1.phone}"/>           
+           </apex:pageBlockTable>
+           
+        </apex:pageBlock>   
+    </apex:form>
+</apex:page>

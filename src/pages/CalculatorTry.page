@@ -1,0 +1,31 @@
+<apex:page id="ProductCalculator" controller="ProductCalculatorNew">
+  <apex:pageBlock id="pbProdCalc">
+      <apex:form id="fProdCalc">
+          <apex:actionFunction name="calculateTotal" action="{!calculateTotal}" reRender="counter1,msg"/>
+          <apex:pageMessages id="msg"></apex:pageMessages>
+          <apex:outputPanel id="counter1">
+          <apex:dataTable id="dtProdCalc" columns="4" value="{!Products}" var="con" styleclass="list">
+              <apex:column id="prodList" headerValue="Product">
+                  <apex:selectList id="slProdList" value="{!prod}" size="1" multiselect="false">
+                      <apex:selectOptions id="soProdList" value="{!items}"/>
+                  </apex:selectList>
+              </apex:column>
+              <apex:column id="prodQuantity" headerValue="Quantity">
+                     <apex:inputText id="Qty" value="{!quantity}"/>
+              </apex:column>
+              <apex:column id="prodPrice" headerValue="Price">
+                  <apex:inputText id="Price" value="{!prodPrice}" onchange="calculateTotal()">
+                      
+              <!--    <apex:actionSupport event="onchange" action="{!calculateTotal}"/> -->
+                  </apex:inputText>
+              </apex:column>
+              <apex:column id="prodTotal" headerValue="Total">
+                 <apex:outputpanel id="counter">
+                  <apex:outputText id="ShowTotal" value="{!ProdTotal}"/>
+                     </apex:outputpanel>
+              </apex:column>
+          </apex:dataTable>
+              </apex:outputPanel>
+      </apex:form>
+  </apex:pageBlock>
+</apex:page>

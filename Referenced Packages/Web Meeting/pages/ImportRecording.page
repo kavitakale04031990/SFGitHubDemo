@@ -1,0 +1,4 @@
+<apex:page standardController="WM2__Recording__c" recordSetVar="recordings"
+	extensions="WM2.ImportRecordingController" action="{!init}">
+	<!-- This page is a link between the 'List Button' on the Recordings tab and the recording details page. -->
+</apex:page>

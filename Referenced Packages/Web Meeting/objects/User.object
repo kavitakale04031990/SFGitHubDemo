@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomObject xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fields>
+        <fullName>WebMeetingAdministrator__c</fullName>
+        <defaultValue>false</defaultValue>
+        <deprecated>false</deprecated>
+        <description>Indicates the user is allowed to perform administrative functions in the Web Meeting application</description>
+        <externalId>false</externalId>
+        <inlineHelpText>Indicates the user is allowed to perform administrative functions in the Web Meeting application</inlineHelpText>
+        <label>Web Meeting Administrator</label>
+        <trackFeedHistory>false</trackFeedHistory>
+        <type>Checkbox</type>
+    </fields>
+    <fields>
+        <fullName>WebMeeting_User__c</fullName>
+        <defaultValue>false</defaultValue>
+        <deprecated>false</deprecated>
+        <description>Indicates the user has access to the full functionality in the Web Meeting application.</description>
+        <externalId>false</externalId>
+        <inlineHelpText>Indicates the user has access to the full functionality in the Web Meeting application.</inlineHelpText>
+        <label>Web Meeting User</label>
+        <trackFeedHistory>false</trackFeedHistory>
+        <type>Checkbox</type>
+    </fields>
+</CustomObject>

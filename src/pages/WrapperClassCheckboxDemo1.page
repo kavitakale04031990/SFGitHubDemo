@@ -1,0 +1,33 @@
+<apex:page controller="CCW_WrapperSampleController1">
+ 
+    <apex:form >
+ 
+        <apex:pageBlock >
+            <apex:pageBlockButtons location="top">
+                <apex:commandButton value="Process Selection" action="{!doProcessSelection}" />
+            </apex:pageBlockButtons>
+ 
+            <apex:outputText escape="false" value="<b>{!message}</b>" />
+ 
+            <br/><br/>
+ 
+            <!-- Table for displaying Contacts -->
+            <apex:pageBlockTable value="{!contactList}" var="c" id="table">
+ 
+                <!-- The 'selected' property in the ContactWrapper class -->
+                <apex:column >
+                    <apex:inputCheckbox value="{!c.selected}"/>
+                </apex:column>
+ 
+                <!-- The contact fields within the ContactWrapper -->
+                <apex:column value="{!c.tContact.FirstName}" />
+                <apex:column value="{!c.tContact.LastName}" />
+                <apex:column value="{!c.tContact.Email}" />
+                <apex:column value="{!c.tContact.Phone}" />
+ 
+            </apex:pageBlockTable>
+        </apex:pageBlock>
+ 
+    </apex:form>
+ 
+</apex:page>

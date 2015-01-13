@@ -1,0 +1,25 @@
+<apex:page controller="WM2.EmailRecordingInviteesController"
+	tabStyle="WM2__Recording__c">
+	<apex:includeScript value="https://ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js" />
+	<style type="text/css">
+/* 
+ *	Wanted to get SFDC VF Default theme to give me some spacing near the top of the page
+ */
+.apexDefaultPageBlock {
+	margin-top: 4px !important;
+}
+</style>
+	<script type="text/javascript">
+
+$(document).ready(function() {
+    sync();
+}); 
+</script>
+	<apex:pageMessages />
+	<apex:pageBlock title="Recording Sync">
+    Please wait while we email recording invitations from Web Meeting
+</apex:pageBlock>
+	<apex:form >
+		<apex:actionFunction name="sync" action="{!sync}" />
+	</apex:form>
+</apex:page>

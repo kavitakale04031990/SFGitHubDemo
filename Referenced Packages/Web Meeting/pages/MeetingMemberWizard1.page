@@ -1,0 +1,23 @@
+<apex:page standardController="WM2__MeetingMember__c" 
+    extensions="WM2.MeetingMemberWizardController" recordSetVar="members">
+<style type="text/css"> 
+/* 
+ *	Wanted to get SFDC VF Default theme to give me some spacing near the top of the page
+ */
+.apexDefaultPageBlock {
+	margin-top: 4px !important;
+}
+</style>
+<apex:form >
+    <apex:pageBlock title="Add Meeting Members">
+        <apex:selectRadio layout="PageDirection" value="{!SObjectType}">
+            <apex:selectOption itemValue="Lead" itemLabel="Add Leads" />
+            <apex:selectOption itemValue="Contact" itemLabel="Add Contacts" />
+        </apex:selectRadio>
+        <div style="padding: 10px 0px">
+            <apex:commandButton value="Cancel" action="{!cancel}" />
+            <apex:commandButton value="Next" action="{!typeSelected}" />
+        </div>
+    </apex:pageBlock>
+</apex:form>
+</apex:page>

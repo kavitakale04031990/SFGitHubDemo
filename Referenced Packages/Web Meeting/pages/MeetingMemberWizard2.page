@@ -1,0 +1,26 @@
+<apex:page standardController="WM2__MeetingMember__c" 
+    extensions="WM2.MeetingMemberWizardController" recordSetVar="members">
+<style type="text/css"> 
+/* 
+ *	Wanted to get SFDC VF Default theme to give me some spacing near the top of the page
+ */
+.apexDefaultPageBlock {
+	margin-top: 4px !important;
+} 
+</style>    
+<apex:form >
+    <apex:pageBlock title="Search for {!SObjectType}"> 
+        <h1 style="padding-bottom: 10px; display: block; font-size: 140%;">
+            Meeting: {!Meeting.Name}
+        </h1>
+        <c:CriteriaBuilder id="myCom" Object="{!SObjectType}" mediator="{!componentMediator}" 
+            SerializedCriteria="{!SerializedCriteria}" />
+        <div style="padding: 10px 0px;">
+            <apex:commandButton value="Cancel" action="{!cancel}" />
+            <apex:commandButton value="Next" action="{!submitCriteria}" />
+        </div>
+        <div style="padding: 10px 0px; width: 400px;" ><apex:pageMessages /></div>
+    </apex:pageBlock>
+</apex:form> 
+        
+</apex:page>

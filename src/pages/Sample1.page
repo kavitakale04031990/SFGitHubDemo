@@ -1,0 +1,19 @@
+<apex:page standardController="Account">
+    <apex:form >
+      <apex:pageBlock id="pgBlockAccount" title="Edit Account: {!Account.Name}" mode="edit">
+            <apex:pageBlockSection id="pgBlockSecAccount" columns="1">
+                <apex:inputField id="AccName" value="{!Account.Name}" taborderhint="1"/>
+                <apex:inputField id="AccRevenue" value="{!Account.annualrevenue}" taborderhint="2"/>
+                <apex:inputField id="AccWebsite" value="{!Account.website}" taborderhint="3"/>
+                <apex:outputField id="AccPhone" value="{!Account.Phone}"/>
+            </apex:pageBlockSection>      
+      </apex:pageBlock>
+      
+      <apex:pageBlock id="pgBlockDependentPicklist" mode="edit" title="Dependent Picklist">
+          <apex:pageBlockSection id="pgBlockSecDependentPicklist" columns="2">
+              <apex:inputField id="AccIndustry" value="{!Account.Industry}"/>
+              <apex:inputField id="AccSubCategory" value="{!Account.Subcategories__c}"/>
+          </apex:pageBlockSection>
+      </apex:pageBlock>
+    </apex:form>
+</apex:page>

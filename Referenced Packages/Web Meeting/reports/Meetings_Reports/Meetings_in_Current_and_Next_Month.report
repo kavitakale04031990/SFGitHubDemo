@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Report xmlns="http://soap.sforce.com/2006/04/metadata">
+    <columns>
+        <field>CUST_NAME</field>
+    </columns>
+    <columns>
+        <field>Meeting__c.MeetingDateTime__c</field>
+    </columns>
+    <columns>
+        <field>Meeting__c.CCMeetingStatus__c</field>
+    </columns>
+    <columns>
+        <field>Meeting__c.Campaign__c</field>
+    </columns>
+    <columns>
+        <field>Meeting__c.NewMeetingMembers__c</field>
+    </columns>
+    <columns>
+        <field>Meeting__c.InvitedMeetingMembers__c</field>
+    </columns>
+    <columns>
+        <field>Meeting__c.ConfirmedMeetingMembers__c</field>
+    </columns>
+    <columns>
+        <field>Meeting__c.PendingMeetingMembers__c</field>
+    </columns>
+    <columns>
+        <field>Meeting__c.DeclinedMeetingMembers__c</field>
+    </columns>
+    <columns>
+        <field>Meeting__c.AttendedMeetingMembers__c</field>
+    </columns>
+    <description>Meetings scheduled for the current and next month</description>
+    <format>Summary</format>
+    <groupingsDown>
+        <dateGranularity>Day</dateGranularity>
+        <field>CUST_OWNER_NAME</field>
+        <sortOrder>Asc</sortOrder>
+    </groupingsDown>
+    <name>Meetings in Current and Next Month</name>
+    <params>
+        <name>co</name>
+        <value>1</value>
+    </params>
+    <reportType>CustomEntity$Meeting__c</reportType>
+    <scope>organization</scope>
+    <showDetails>true</showDetails>
+    <timeFrameFilter>
+        <dateColumn>Meeting__c.MeetingDateTime__c</dateColumn>
+        <interval>INTERVAL_THISNEXTMONTH</interval>
+    </timeFrameFilter>
+</Report>
